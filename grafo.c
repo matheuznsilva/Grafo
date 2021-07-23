@@ -105,3 +105,22 @@ int removeAresta(GRAFO* gr, int orig, int dest, int eh_digrafo){
 	}
 	return 1;
 }
+
+void buscaProfundidade(GRAFO* gr, int ini, int *visitado, int cont){
+	int i;
+	visitado[ini] = cont;
+	for (int i = 0; i < gr->nro_vert; ++i){
+		if(!visitado[gr->arestas[ini][i]]){
+			buscaProfundidade(gr, gr->arestas[ini][i], visitado, cont+1);
+		}
+	}
+}
+
+void buscaProfundidade_Grafo(GRAFO* gr, int ini, int *visitado){
+	int i, cont = 1;
+	for (int i = 0; i < gr->nro_vert; ++i){
+		visitado[i] = 0;
+	}
+	buscaProfundidade(gr, ini, visitado, cont);
+
+}
