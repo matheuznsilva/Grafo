@@ -124,3 +124,29 @@ void buscaProfundidade_Grafo(GRAFO* gr, int ini, int *visitado){
 	buscaProfundidade(gr, ini, visitado, cont);
 
 }
+
+void buscaLargura_Grafo(GRAFO *gr, int ini, int *visitado){
+	int i, vert, NV, cont = 1;
+	int *fila, IF = 0, FF = 0;
+	for (int i = 0; i < gr->nro_vert; ++i){
+		visitado[i] = 0;
+	}
+	NV = gr->nro_vert;
+	fila = (int*)malloc(NV * sizeof(int));
+	FF++;
+	fila[FF] = ini;
+	visitado[ini] = cont;
+	while(IF != FF){
+		IF = (IF + 1) % NV;
+		vert = fila[IF];
+		cont++;
+		for (int i = 0; i < gr->grau[vert]; ++i){
+			if(!visitado[gr->arestas[vert][i]]){
+				FF = (FF + 1) % NV;
+				fila[FF] = gr->arestas[vert][i];
+				visitado[gr->arestas[vert][i]] = cont;
+			}
+		}
+	}
+	free(fila);
+}
