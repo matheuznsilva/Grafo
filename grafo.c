@@ -150,3 +150,53 @@ void buscaLargura_Grafo(GRAFO *gr, int ini, int *visitado){
 	}
 	free(fila);
 }
+
+int procuraMenorDistancia(float *dist, int *visitado, int NV){
+	int i, menor = -1, primeiro = 1;
+	for (int i = 0; i < NV; ++i){
+		if(dist[i] >= 0 && visitado[i] == 0){
+			if(primeiro){
+				menor = i;
+				primeiro = 0;
+			} else{
+				if(dist[menor] > dist[i]){
+					menor = i;
+				}
+			}
+		}
+	}
+	return menor;
+}
+
+void menorCaminho_Grafo(GRAFO *gr, int ini, int *ant, float *dist){
+	int i, cont, NV, ind, *visitado, vert;
+	cont = NV = gr->nro_vert;
+	visitado = (int*)malloc(NV * sizeof(int));
+	for (int i = 0; i < NV; ++i){
+		ant[i] = -1;
+		dist[i] = -1;
+		visitado[i] = 0;
+	}
+	dist[ini] = 0;
+	while(cont > 0){
+		vert = procuraMenorDistancia(dist, visitado, NV);
+		if(vert == -1){
+			break;
+		}
+		visitado[vert] = 1;
+		cont--;
+		for (int i = 0; i < gr->grau[vert]; ++i){
+			ind = gr->arestas[vert][i];
+			if(dist[ind] < 0){
+				dist[ind] = dist[vert]+1;
+				ant[ind] = vert;
+			} else{
+				if(dist[ind] > dist[vert]+1){
+					dist[ind] = dist[vert]+1;
+					ant[ind] = vert;
+				}
+			}
+		}
+	}
+	free(visitado);	
+}
