@@ -17,3 +17,5 @@ void buscaLargura_Grafo(GRAFO *gr, int ini, int *visitado);
 int procuraMenorDistancia(float *dist, int *visitado, int NV);
 
 void menorCaminho_Grafo(GRAFO *gr, int ini, int *ant, float *dist);
+
+void algoritimoPRIM_Grafo(GRAFO *gr, int orig, int *pai);

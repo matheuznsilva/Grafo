@@ -109,7 +109,7 @@ int removeAresta(GRAFO* gr, int orig, int dest, int eh_digrafo){
 void buscaProfundidade(GRAFO* gr, int ini, int *visitado, int cont){
 	int i;
 	visitado[ini] = cont;
-	for (int i = 0; i < gr->nro_vert; ++i){
+	for (i = 0; i < gr->nro_vert; ++i){
 		if(!visitado[gr->arestas[ini][i]]){
 			buscaProfundidade(gr, gr->arestas[ini][i], visitado, cont+1);
 		}
@@ -118,7 +118,7 @@ void buscaProfundidade(GRAFO* gr, int ini, int *visitado, int cont){
 
 void buscaProfundidade_Grafo(GRAFO* gr, int ini, int *visitado){
 	int i, cont = 1;
-	for (int i = 0; i < gr->nro_vert; ++i){
+	for (i = 0; i < gr->nro_vert; ++i){
 		visitado[i] = 0;
 	}
 	buscaProfundidade(gr, ini, visitado, cont);
@@ -128,7 +128,7 @@ void buscaProfundidade_Grafo(GRAFO* gr, int ini, int *visitado){
 void buscaLargura_Grafo(GRAFO *gr, int ini, int *visitado){
 	int i, vert, NV, cont = 1;
 	int *fila, IF = 0, FF = 0;
-	for (int i = 0; i < gr->nro_vert; ++i){
+	for (i = 0; i < gr->nro_vert; ++i){
 		visitado[i] = 0;
 	}
 	NV = gr->nro_vert;
@@ -140,7 +140,7 @@ void buscaLargura_Grafo(GRAFO *gr, int ini, int *visitado){
 		IF = (IF + 1) % NV;
 		vert = fila[IF];
 		cont++;
-		for (int i = 0; i < gr->grau[vert]; ++i){
+		for (i = 0; i < gr->grau[vert]; ++i){
 			if(!visitado[gr->arestas[vert][i]]){
 				FF = (FF + 1) % NV;
 				fila[FF] = gr->arestas[vert][i];
@@ -153,7 +153,7 @@ void buscaLargura_Grafo(GRAFO *gr, int ini, int *visitado){
 
 int procuraMenorDistancia(float *dist, int *visitado, int NV){
 	int i, menor = -1, primeiro = 1;
-	for (int i = 0; i < NV; ++i){
+	for (i = 0; i < NV; ++i){
 		if(dist[i] >= 0 && visitado[i] == 0){
 			if(primeiro){
 				menor = i;
@@ -172,7 +172,7 @@ void menorCaminho_Grafo(GRAFO *gr, int ini, int *ant, float *dist){
 	int i, cont, NV, ind, *visitado, vert;
 	cont = NV = gr->nro_vert;
 	visitado = (int*)malloc(NV * sizeof(int));
-	for (int i = 0; i < NV; ++i){
+	for (i = 0; i < NV; ++i){
 		ant[i] = -1;
 		dist[i] = -1;
 		visitado[i] = 0;
@@ -185,7 +185,7 @@ void menorCaminho_Grafo(GRAFO *gr, int ini, int *ant, float *dist){
 		}
 		visitado[vert] = 1;
 		cont--;
-		for (int i = 0; i < gr->grau[vert]; ++i){
+		for (i = 0; i < gr->grau[vert]; ++i){
 			ind = gr->arestas[vert][i];
 			if(dist[ind] < 0){
 				dist[ind] = dist[vert]+1;
@@ -199,4 +199,41 @@ void menorCaminho_Grafo(GRAFO *gr, int ini, int *ant, float *dist){
 		}
 	}
 	free(visitado);	
+}
+
+void algoritimoPRIM_Grafo(GRAFO *gr, int orig, int *pai){
+	int i, j, dest, NV, primeiro;
+	double menorPeso;
+	NV = gr->nro_vert;
+	for (i = 0; i < NV; ++i){
+		pai[i] = -1; // sem pai
+	}
+	pai[orig] = orig;
+	while(1){
+		primeiro = 1;
+		for (i = 0; i < NV; ++i){
+			if(pai[i] != -1){
+				for (j = 0; j < gr->grau[i]; j++){
+					if(pai[gr->arestas[i][j]] == -1){
+						if(primeiro){
+							menorPeso = gr->pesos[i][j];
+							orig = i;
+							dest = gr->arestas[i][j];
+							primeiro = 0;
+						} else{
+							if(menorPeso > gr->pesos[i][j]){
+								menorPeso = gr->pesos[i][j];
+								orig = i;
+								dest = gr->arestas[i][j];
+							}
+						}
+					}
+				}
+			}
+		}
+		if (primeiro == 1){
+			break;
+		}
+		pai[dest] = orig;
+	}
 }
