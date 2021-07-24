@@ -237,3 +237,50 @@ void algoritimoPRIM_Grafo(GRAFO *gr, int orig, int *pai){
 		pai[dest] = orig;
 	}
 }
+
+void algoritimoKRUSKAL_Grafo(GRAFO *gr, int orig, int *pai){
+	int i, j, dest, NV, primeiro, *arv;
+	double menorPeso;
+	NV = gr->nro_vert;
+	arv = (int*)malloc(NV * sizeof(int));
+	for (i = 0; i < NV; ++i){
+		arv[i] = i;
+		pai[i] = -1; // sem pai
+	}
+	pai[orig] = orig;
+	while(1){
+		primeiro = 1;
+		for (i = 0; i < NV; ++i){
+			for (j = 0; j < gr->grau[i]; j++){
+				if(arv[i] != arv[gr->arestas[i][j]]){
+					if(primeiro){
+						menorPeso = gr->pesos[i][j];
+						orig = i;
+						dest = gr->arestas[i][j];
+						primeiro = 0;
+					} else{
+						if(menorPeso > gr->pesos[i][j]){
+							menorPeso = gr->pesos[i][j];
+							orig = i;
+							dest = gr->arestas[i][j];
+						}
+					}
+				}
+			}
+		}
+		if (primeiro == 1){
+			break;
+		}
+		if(pai[orig] == -1){
+			pai[orig] = dest;
+		} else{
+			pai[dest] = orig;
+		}
+		for (i = 0; i < NV; ++i){
+			if (arv[i] == arv[dest]){
+				arv[i] = arv[orig];
+			}
+		}
+	}
+	free(arv);
+}
